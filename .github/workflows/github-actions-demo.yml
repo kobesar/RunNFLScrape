@@ -1,7 +1,9 @@
 name: Scrape NFL Data
 
 # Controls when the action will run.
-
+on:
+  schedule:
+    - cron:  '0 6 * * *'
 
 
 jobs: 
