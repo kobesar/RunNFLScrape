@@ -1,4 +1,4 @@
-name: sitemap_scraping
+name: Scrape NFL Data
 
 # Controls when the action will run.
 on:
