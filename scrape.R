@@ -20,6 +20,16 @@ cumulative_mean_fill_missing <- function(input_vector) {
   return(output_vector)
 }
 
+# Function to convert moneyline to decimal odds
+moneyline_to_odds <- function(moneyline) {
+  ifelse(moneyline > 0, 1 + (moneyline / 100), 1 - abs(100 / moneyline))
+}
+
+# Function to convert moneyline to implied probability
+moneyline_to_probability <- function(moneyline) {
+  ifelse(moneyline > 0, 100 / (moneyline + 100), abs(moneyline) / (abs(moneyline) + 100))
+}
+
 pbp <- load_pbp(seasons = c(2010:2023))
 
 schedule <- load_schedules(season = c(2010:2023))
@@ -88,5 +98,9 @@ full_df <- schedule %>%
               rename("opp_def_epa" = "def_epa") %>% 
               ungroup() %>% 
               select(-week), by = c("season", "week" = "join_week", "opponent" = "defteam"))
+
+full_df <- full_df %>% 
+  mutate(ml_prob = moneyline_to_probability(moneyline),
+         ml_odds = moneyline_to_odds(moneyline))
 
 write_csv(full_df, "data/NFLGameByGameData.csv")
