@@ -83,7 +83,7 @@ full_df <- schedule %>%
   mutate(
     moneyline = ifelse(status == "home_team", home_moneyline, away_moneyline)
   ) %>% 
-  select(season, week, team, opponent, win, score, status, under_odds, over_odds, moneyline, div_game, roof, surface) %>% 
+  select(game_id, season, week, team, opponent, win, score, status, under_odds, over_odds, moneyline, div_game, roof, surface) %>% 
   left_join(off_epa %>% 
               ungroup() %>% 
               select(-week), by = c("season", "week" = "join_week", "team" = "posteam")) %>% 
@@ -101,6 +101,7 @@ full_df <- schedule %>%
 
 full_df <- full_df %>% 
   mutate(ml_prob = moneyline_to_probability(moneyline),
-         ml_odds = moneyline_to_odds(moneyline))
+         ml_odds = moneyline_to_odds(moneyline),
+         ev_100 = 100*ml_prob - 100*(1-ml_prob))
 
 write_csv(full_df, "data/NFLGameByGameData.csv")
